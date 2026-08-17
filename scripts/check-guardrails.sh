@@ -51,9 +51,9 @@ check_branch_name() {
     return 0
   fi
 
-  # Allow main branch pushes/merges
-  if [[ "$BRANCH_NAME" == "main" ]]; then
-    log_pass "Branch is 'main' (allowed for merge commits / baseline)."
+  # Allow main and development branch pushes/merges
+  if [[ "$BRANCH_NAME" == "main" || "$BRANCH_NAME" == "development" || "$BRANCH_NAME" == "develop" ]]; then
+    log_pass "Branch is '$BRANCH_NAME' (allowed baseline/default branch)."
     return 0
   fi
 
@@ -97,15 +97,19 @@ check_commit_messages() {
 
   # Check recent local commits compared to main (if git repo exists)
   if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    BASE_REF="main"
-    if git rev-parse --verify "origin/main" >/dev/null 2>&1; then
+    BASE_REF="development"
+    if git rev-parse --verify "origin/development" >/dev/null 2>&1; then
+      BASE_REF="origin/development"
+    elif git rev-parse --verify "origin/main" >/dev/null 2>&1; then
       BASE_REF="origin/main"
+    elif git rev-parse --verify "main" >/dev/null 2>&1; then
+      BASE_REF="main"
     fi
 
     COMMITS=$(git log "${BASE_REF}..HEAD" --oneline 2>/dev/null || git log -n 5 --oneline 2>/dev/null || echo "")
 
     if [[ -z "$COMMITS" ]]; then
-      log_pass "No unmerged commits found or working on main."
+      log_pass "No unmerged commits found or working on baseline branch."
       return 0
     fi
 

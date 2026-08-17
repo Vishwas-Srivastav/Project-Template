@@ -6,24 +6,24 @@ Thank you for contributing! We aim to keep our engineering workflow lightweight,
 
 ## 1. Development Workflow & Guardrails
 
-All contributions follow a standard pull request lifecycle. Direct pushes to `main` are prohibited.
+All contributions follow a standard pull request lifecycle targeting the **`development`** branch. Direct pushes to `development` and `main` are prohibited.
 
 ```text
-Issue / Task
+Issue / Task (e.g., WSAI-01)
      ↓
-Create Branch (Validated by Guardrails)
+Create Branch: WSAI-01
      ↓
-Implement Changes
+Implement Changes & Local Commits (Conventional Format)
      ↓
-Commit (Conventional Commits Guardrail)
-     ↓
-Push Branch & Open Pull Request (Pre-Push Guardrail)
+Push Branch & Open Pull Request into 'development'
      ↓
 Automated CI Checks (Gitleaks, Branch Check, Tests, Build)
      ↓
-Code Review (Human Review: UI & MVP Standards)
+Code Review & Approval
      ↓
-Merge into main
+Merge into 'development'
+     ↓ (Automated GitHub Action)
+Auto-Synced to 'main' (Production)
 ```
 
 ---
@@ -62,7 +62,7 @@ Branches are named using the **Project Initials** and a traceable work item **Nu
 
 - **Format:** Always use project initials followed by a hyphen and number (e.g., `WSAI-01`, `UC-02`, `ML-03`).
 - **One Focused Unit of Work:** Each branch should address a single task, feature, or bug fix.
-- **Never Work Directly on `main`:** All changes must arrive via pull request.
+- **Never Work Directly on `development` or `main`:** All changes must arrive via pull request into `development`.
 - **No Developer Names in Branches:** Do not prefix branches with usernames (e.g., avoid `john/fix-bug` or `alice/feature-login`).
 - **No Vague Branch Names:** Avoid names like `test`, `temp`, `changes`, `new-feature`, `quick-fix`, or `final`.
 - **Automated Enforcement:** Branch names are checked locally before push via `.githooks/pre-push` and in CI via `.github/workflows/ci.yml`.

@@ -8,35 +8,32 @@ This document outlines the recommended GitHub repository settings to configure a
 
 ---
 
-## 1. Branch Protection & Rulesets (`main`)
+## 1. Setting `development` as Default Branch
 
-To prevent accidental direct pushes and guarantee that code meets quality standards before reaching production, configure branch protection for the `main` branch.
-
-### Recommended Steps (GitHub Rulesets)
-
-1. Navigate to **Settings** > **Rules** > **Rulesets** (or **Settings** > **Branches** > **Branch protection rules**).
-2. Click **New ruleset** (or **Add branch protection rule**).
-3. **Ruleset Name:** `Protect main`
-4. **Enforcement Status:** `Active`
-5. **Target Branches:** Select **Default branch** (or add target pattern `main`).
-
-### Recommended Rule Configurations
-
-| Setting | Recommended Value | Purpose |
-| :--- | :--- | :--- |
-| **Restrict creations** | Enabled | Prevents direct creation of unauthorized branches matching rule |
-| **Restrict deletions** | Enabled | Prevents accidental deletion of the `main` branch |
-| **Block force pushes** | Enabled | Prevents history rewrites on `main` |
-| **Require a pull request before merging** | Enabled | Enforces all changes to go through PR review |
-| ↳ *Required approvals* | `1` | Ensures peer code review before merge |
-| ↳ *Dismiss stale pull request approvals on new commits* | Enabled | Re-verifies approval when code changes |
-| **Require status checks to pass** | Enabled | Blocks merging until CI checks succeed |
-| ↳ *Require branches to be up to date before merging* | Enabled | Ensures testing against latest `main` commit |
-| ↳ *Status checks required* | `Validate Branch & PR Conventions`<br>`Security & Secret Scan`<br>`Lint, Test & Build` | Validates naming, security, and tests |
+1. Navigate to **Settings** > **General** > **Default branch**.
+2. Click the switch/edit icon, select **`development`**, and confirm the update.
+3. All new Pull Requests will now target `development` by default.
 
 ---
 
-## 2. Pull Request & Merge Automation
+## 2. Branch Protection & Rulesets (`development` & `main`)
+
+### Ruleset A: Protect `development` (Active Development Branch)
+1. Navigate to **Settings** > **Rules** > **Rulesets** > **New ruleset**.
+2. **Ruleset Name:** `Protect development`
+3. **Target Branches:** `development`
+4. **Rules:**
+   - **Require a pull request before merging** (1 approval).
+   - **Require status checks to pass** (`Engineering Guardrails`, `Security & Secret Scan`, `Lint, Test & Build`).
+   - **Block force pushes** & **Restrict deletions**.
+
+### Ruleset B: Protect `main` (Production Branch)
+- `main` is automatically updated whenever a PR merges into `development` via [.github/workflows/sync-main.yml](../.github/workflows/sync-main.yml).
+- Ensure direct manual pushes to `main` are disabled.
+
+---
+
+## 3. Pull Request & Merge Automation
 
 Under **Settings** > **General** > **Pull Requests**:
 
