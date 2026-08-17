@@ -73,6 +73,17 @@ check_branch_name() {
     echo -e "         ${YELLOW}Examples:${NC} WSAI-01 (WebscribeAI), UC-01 (Unclutter), ML-01 (Memory Lens)"
     echo -e "         ${YELLOW}Prohibited:${NC} Developer names ('john/feature'), vague names ('test', 'changes', 'fix')"
   fi
+
+  # Guardrail: PR must target the 'development' branch, not 'main'
+  if [[ -n "${GITHUB_BASE_REF:-}" ]]; then
+    if [[ "$GITHUB_BASE_REF" == "development" || "$GITHUB_BASE_REF" == "develop" ]]; then
+      log_pass "PR targets valid baseline branch: '$GITHUB_BASE_REF'."
+    else
+      log_fail "PR targets '$GITHUB_BASE_REF'. All PRs must target 'development'!"
+      echo -e "         ${YELLOW}Rule:${NC} Branches must be cut from and merged into 'development'."
+      echo -e "         ${YELLOW}Sync:${NC} Merges to 'development' are automatically synced to 'main'."
+    fi
+  fi
 }
 
 # ==============================================================================
