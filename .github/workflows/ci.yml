@@ -17,6 +17,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Explicit permissions required for PR inspection and security scanning
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   # ============================================================================
   # 1. Engineering Guardrails Validation
@@ -46,6 +51,9 @@ jobs:
   security-guardrails:
     name: Security & Secret Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
