@@ -86,3 +86,31 @@ Human review is focused on high-value architecture, usability, and the **MVP Pri
 2. **Small PRs:** Single-purpose, easily reviewable changes.
 3. **Clear Responsibilities:** Code is straightforward, readable, and avoids premature abstractions.
 4. **Accessible UI:** Follows [docs/UI_GUIDELINES.md](file:///Users/vishwassrivastav/Desktop/Work/Project%20Template/docs/UI_GUIDELINES.md).
+
+---
+
+## Quick Reference Cheat Sheet
+
+| Guardrail Rule | What is Enforced | How to Comply |
+| :--- | :--- | :--- |
+| **Branch Naming** | `<PROJECT_INITIALS>-<NUMBER>` | `git checkout -b PT-01` (or `feature/PT-01`) |
+| **Commit Messages** | Conventional Commits standard | `git commit -m "feat: description"` |
+| **Secrets & Keys** | Never commit `.env` or certificates | Keep credentials in `.env` (ignored by git) |
+| **UI Iconography** | SVG icons only, strictly no emojis | Use `<svg>` or icon components, never ⚙ / 🚀 |
+| **Direct Push** | Direct push to `main` blocked | Always open a Pull Request |
+
+---
+
+## Troubleshooting Common Guardrail Errors
+
+### 1. "Invalid commit message format"
+- **Cause:** Commit message did not start with a recognized Conventional Commit type.
+- **Fix:** Amend commit with `git commit --amend -m "feat: your concise summary"`.
+
+### 2. "Branch name violates project conventions"
+- **Cause:** Branch does not match `<PROJECT_INITIALS>-<NUMBER>`.
+- **Fix:** Rename branch with `git branch -m PT-01`.
+
+### 3. "Attempting to commit sensitive environment file"
+- **Cause:** A real `.env` file was staged.
+- **Fix:** Run `git reset HEAD .env` and ensure only `.env.example` is tracked.
