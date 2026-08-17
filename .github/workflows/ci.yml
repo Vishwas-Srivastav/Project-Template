@@ -43,6 +43,7 @@ jobs:
       - name: Run Guardrail Suite
         env:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
           GITHUB_PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           ./scripts/check-guardrails.sh --all

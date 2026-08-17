@@ -35,4 +35,23 @@ if [[ ! "$CURRENT_BRANCH" =~ $BRANCH_REGEX ]]; then
   exit 1
 fi
 
+# Validate that branch is cut from and has history with 'development'
+BASE_REF=""
+if git rev-parse --verify "origin/development" >/dev/null 2>&1; then
+  BASE_REF="origin/development"
+elif git rev-parse --verify "development" >/dev/null 2>&1; then
+  BASE_REF="development"
+fi
+
+if [[ -n "$BASE_REF" ]]; then
+  MERGE_BASE=$(git merge-base "$BASE_REF" HEAD 2>/dev/null || echo "")
+  if [[ -z "$MERGE_BASE" ]]; then
+    echo ""
+    echo -e "\033[0;31m[GUARDRAIL ERROR]\033[0m Branch '$CURRENT_BRANCH' has no shared commit history with '$BASE_REF'."
+    echo "Rule: All branches must be cut from the 'development' branch."
+    echo ""
+    exit 1
+  fi
+fi
+
 exit 0
