@@ -6,8 +6,8 @@
 
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-# Allow main branch pushes if configured on local repo
-if [[ "$CURRENT_BRANCH" == "main" ]]; then
+# Allow default/baseline branch pushes
+if [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "development" || "$CURRENT_BRANCH" == "develop" ]]; then
   exit 0
 fi
 
