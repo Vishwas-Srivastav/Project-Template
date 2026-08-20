@@ -31,14 +31,20 @@ jobs:
       - name: Merge Development into Main and Push
         run: |
           echo "Fetching latest main and development branches..."
-          git fetch origin main:main
-          git checkout main
+          if git ls-remote --exit-code --heads origin main >/dev/null 2>&1; then
+            echo "Remote 'main' branch exists. Fetching origin main:main..."
+            git fetch origin main:main
+            git checkout main
+          else
+            echo "Remote 'main' branch does not exist yet. Creating 'main' from 'development'..."
+            git checkout -b main
+          fi
 
           echo "Merging development into main..."
-          # Try fast-forward first; fallback to clean merge commit if histories diverged
-          if ! git merge --ff-only development; then
-            echo "Fast-forward not possible, performing merge commit..."
-            git merge --no-edit -m "chore(release): sync development into main [skip ci]" development
+          # Try fast-forward first; fallback to clean merge commit with --allow-unrelated-histories if histories diverged
+          if ! git merge --ff-only development 2>/dev/null; then
+            echo "Fast-forward not possible or histories unrelated, performing merge commit..."
+            git merge --no-edit --allow-unrelated-histories -m "chore(release): sync development into main [skip ci]" development
           fi
 
           echo "Pushing updated main to origin..."
